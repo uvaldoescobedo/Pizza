@@ -5,6 +5,7 @@
  */
 package VInicial;
 
+import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,13 +66,13 @@ double totalv = 0;
                 }
             }
 
-     cobonumpizza.removeAllItems();
-     cobonumpizza.addItem("1");
-     cobonumpizza.addItem("2");
-     
-     cobonumpizza.addItem("3");
-     cobonumpizza.addItem("4");
-          cobonumpizza.addItem("5");
+    cobonumpizza.removeAllItems();
+     int limit=0;
+        while(limit<=5){
+            limit++;
+            cobonumpizza.addItem( Integer.toString(limit));
+            
+        }
 
      
      
@@ -237,8 +238,7 @@ double totalv = 0;
     }// </editor-fold>//GEN-END:initComponents
 
     private void combo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo1ActionPerformed
-     
-
+  
 
         // TODO add your handling code here:
     }//GEN-LAST:event_combo1ActionPerformed
@@ -251,7 +251,7 @@ double totalv = 0;
 
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+int disponibles =0;
   public String dameprecio(String espe){
       String preciouni="";
       System.out.println("Estoy buscando"+espe);
@@ -273,9 +273,12 @@ double totalv = 0;
                 
                 datos[1]=rs.getString(2);
                 datos[2]=rs.getString(3);
-                datos[3]= rs.getString(4);
+                datos[3]= rs.getString(4);//disponibles
+                
                  if(espe.equals(datos[1])){
                     preciouni=datos[2];
+                    disponibles=Integer.parseInt( datos[3]);
+                    
                 }
             //    System.out.println(datos[0]+datos[1]+datos[2]+datos[3]);
                
@@ -284,8 +287,10 @@ double totalv = 0;
         } catch (SQLException ex) {
             Logger.getLogger(InventarioPizzas.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+   
  
-      System.out.println("y el precio es" + preciouni);
+      System.out.println("y el precio es" + preciouni+"gengo disponibles:"+disponibles);
     return preciouni;
       
   } 
@@ -303,14 +308,18 @@ double totalv = 0;
          Integer chosenNumber = (Integer)cobonumpizza.getSelectedIndex();
         // System.out.println(cantVL+chosenNumber);
        int cantV = chosenNumber+1;
-       
        String preciou = dameprecio(Especialidad);
        
-       double precioU= Double.parseDouble(dameprecio(Especialidad));//mandar de arriba
+       double precioU= Double.parseDouble(preciou);//mandar de arriba
        double subtotal = (cantV*precioU);
        String subTotalS = ""+subtotal;
        totalv = totalv + subtotal;
        
+       if(cantV>disponibles){
+           JOptionPane.showMessageDialog(null,"No Existen tantas Pizzas Ver Inventario");
+           
+       }else{
+  
       String []datos = new String [4];
  
                 datos[0]=""+cantV;
@@ -325,22 +334,24 @@ double totalv = 0;
         
           
     try {
+         PreparedStatement ps= cn.prepareStatement("UPDATE pizzas SET Disponibles='"+(disponibles -cantV)+"' WHERE especialidad='"+Especialidad+"'");
+        
+            ps.executeUpdate();
 
         PreparedStatement pst = cn.prepareStatement("INSERT INTO ventas(cantidades,especialidad,Precio_Unitario,Total_Venta) VALUES (?,?,?,?)");
             pst.setString(1, datos[0]);
             pst.setString(2, datos[1]);
             pst.setString(3, datos[2]);
             pst.setString(4, datos[3]);
-        
             pst.executeUpdate();
-        
-        
-        
+  
     } catch (Exception e) {
         System.out.print(e.getMessage());
     }
   
  jTextArea1.setText(" $"+totalv);
+       }
+ 
         // TODO add your handling code here:
         
                   // TODO add your handling code here:

@@ -1,0 +1,6 @@
+Montar mysql 
+
+importar BD
+
+crear Usuario Admin con password root
+direccion localhost

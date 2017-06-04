@@ -274,7 +274,7 @@ double totalv = 0;
                 datos[1]=rs.getString(2);
                 datos[2]=rs.getString(3);
                 datos[3]= rs.getString(4);
-                 if(espe == datos[1]){
+                 if(espe.equals(datos[1])){
                     preciouni=datos[2];
                 }
             //    System.out.println(datos[0]+datos[1]+datos[2]+datos[3]);
